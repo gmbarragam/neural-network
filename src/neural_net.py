@@ -19,16 +19,12 @@ class NeuralNet:
         self.__intermediate_layers[-1].next_layer = self.__exit_layer
 
     def train(self, momentum, learning_ratio, data, result):
-        self.__initial_layer.propagation(data)
+        simplified_exit = self.__initial_layer.propagation(data)
         self.__exit_layer.error_calc(result)
         self.__exit_layer.backpropagation(momentum, learning_ratio)
-        # print(self.__exit_layer.weights)
-        return self.__exit_layer.exit
+        return simplified_exit
 
 
     def evaluate(self, data):
-        self.__initial_layer.propagation(data)
-        return self.__exit_layer.exit
-
-    def __str__(self):
-        return(("intermediate layers: %d de tamanho %d" % (len(self.__intermediate_layers), self.__intermediate_layers[0].n_neurons)))
+        simplified_text = self.__initial_layer.propagation(data)
+        return simplified_exit

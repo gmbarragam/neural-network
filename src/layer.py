@@ -16,7 +16,7 @@ class InitialLayer(Layer):
 
     def propagation(self, entry):
         self.exit = np.matrix(entry)
-        self.next_layer.propagation()
+        return self.next_layer.propagation()
 
     def error_calc(self): pass
     def backpropagation(self, momentum, learning_ratio): pass
@@ -25,8 +25,8 @@ class InitialLayer(Layer):
 class IntermidiateLayer(Layer):
     def __init__(self, n_neurons, previous_layer, next_layer):
         super(IntermidiateLayer, self).__init__(n_neurons)
-        # self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
-        self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
+        self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
+        # self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
         self.v = np.vectorize(self.transfer_function)
         self.previous_layer = previous_layer
         self.next_layer = next_layer
@@ -36,7 +36,7 @@ class IntermidiateLayer(Layer):
 
     def propagation(self):
         self.exit = self.v(np.dot(self.previous_layer.exit, self.weights))
-        self.next_layer.propagation()
+        return self.next_layer.propagation()
 
     def error_calc(self):
         self.error = np.multiply(np.multiply(self.exit,
@@ -52,8 +52,8 @@ class IntermidiateLayer(Layer):
 class ExitLayer(Layer):
     def __init__(self, n_neurons, previous_layer, threshold):
         super(ExitLayer, self).__init__(n_neurons)
-        # self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
-        self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
+        self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
+        # self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
         self.v = np.vectorize(self.transfer_function)
         self.previous_layer = previous_layer
         self.threshold = threshold
@@ -65,19 +65,16 @@ class ExitLayer(Layer):
     def propagation(self):
         self.exit = self.v(np.dot(self.previous_layer.exit, self.weights))
         biggest_index = np.argmax(self.exit)
-        self.exit = np.zeros((1,7))
+        simplified_exit = np.zeros((1,7))
         # print(self.exit)
-        self.exit[0][biggest_index] = 1
-        # print(self.exit)
+        simplified_exit[0][biggest_index] = 1
+        return simplified_exit
         # print("--------------------------")
 
     def error_calc(self, result):
-        print(self.error.shape)
         self.error = np.multiply(np.multiply(
             self.exit, (1 - self.exit)), (result - self.exit))
-        print(self.error.shape)
         self.previous_layer.error_calc()
-        input()
 
     def backpropagation(self, momentum, learning_ratio):
         self.weights = (self.weights * momentum) + (

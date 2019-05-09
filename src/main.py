@@ -1,4 +1,5 @@
 from neural_net import NeuralNet
+import matplotlib.pyplot as plt
 import numpy as np
 
 def main():
@@ -18,6 +19,8 @@ def main():
         count += 1
 
     n_results = len(types)
+    plt.ion()
+    plt.imshow(np.zeros((n_results, n_results)))
 
     with open("segmentation.test", "r") as arq:
         for line in arq:
@@ -27,24 +30,31 @@ def main():
 
     neural_net = NeuralNet(19, 1, 26, 7)
     confusion_matrix = np.zeros((n_results, n_results))
-    for epochs in range(500):
+    for epochs in range(200):
         confusion_matrix = np.zeros((n_results, n_results))
         for item in data:
             train_in = item[0]
             expected = item[1]
-            train_exit = neural_net.train(1, 0.0005, train_in, expected)
-            # print(train_exit)
-            # print(type(train_exit))
-            # print(train_exit.shape)
-            # print(train_exit)
-            confusion_matrix[expected.tolist().index(1)] += train_exit.tolist()[0]
-            # print(confusion_matrix)
-            # confusion_matrix[expected.index(1)] += np.transpose(train_exit[0])
-        print(epochs)
+            train_exit = neural_net.train(1, 0.05, train_in, expected)
+            confusion_matrix[expected[0].tolist().index(1)] += train_exit[0].tolist()
         if(epochs % 50 == 0):
             print(confusion_matrix)
-    print(neural_net)
+            plt.imshow(confusion_matrix)
+            plt.draw()
+            plt.pause(1)
 
-
+    confusion_matrix = np.zeros((n_results, n_results))
+"       confusion_matrix = np.zeros((n_results, n_results))
+        for item in data:
+            train_in = item[0]
+            expected = item[1]
+            train_exit = neural_net.train(1, 0.05, train_in, expected)
+            confusion_matrix[expected[0].tolist().index(1)] += train_exit[0].tolist()
+        if(epochs % 50 == 0):
+            print(confusion_matrix)
+            plt.imshow(confusion_matrix)
+            plt.draw()
+            plt.pause(1)
+"
 if __name__ == '__main__':
     main()
