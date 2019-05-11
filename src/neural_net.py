@@ -26,5 +26,5 @@ class NeuralNet:
 
 
     def evaluate(self, data):
-        simplified_text = self.__initial_layer.propagation(data)
+        simplified_exit = self.__initial_layer.propagation(data)
         return simplified_exit
