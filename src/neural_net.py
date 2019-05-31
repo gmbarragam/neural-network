@@ -5,7 +5,7 @@ class NeuralNet:
     def __init__(self, n_entries, n_intermidiate_layers, intermediate_layer_size, n_exits):
         self.__initial_layer = InitialLayer(n_entries, None)
         self.__intermediate_layers = []
-        self.__exit_layer = ExitLayer(n_exits, self.__initial_layer, 0.9)
+        self.__exit_layer = ExitLayer(n_exits, self.__initial_layer)
         self.__initial_layer.next_layer = self.__exit_layer
 
         last_layer = self.__initial_layer

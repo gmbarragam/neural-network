@@ -26,7 +26,6 @@ class IntermidiateLayer(Layer):
     def __init__(self, n_neurons, previous_layer, next_layer):
         super(IntermidiateLayer, self).__init__(n_neurons)
         self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
-        # self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
         self.v = np.vectorize(self.transfer_function)
         self.previous_layer = previous_layer
         self.next_layer = next_layer
@@ -50,26 +49,21 @@ class IntermidiateLayer(Layer):
         self.previous_layer.backpropagation(momentum, learning_ratio)
 
 class ExitLayer(Layer):
-    def __init__(self, n_neurons, previous_layer, threshold):
+    def __init__(self, n_neurons, previous_layer):
         super(ExitLayer, self).__init__(n_neurons)
         self.weights = np.random.rand(previous_layer.n_neurons, n_neurons)
-        # self.weights = np.zeros((previous_layer.n_neurons, n_neurons))
         self.v = np.vectorize(self.transfer_function)
         self.previous_layer = previous_layer
-        self.threshold = threshold
 
     def transfer_function(self, sum):
-        # return (1 if 1 / (1 + exp(-sum)) > self.threshold else 0)
         return 1 / (1 + exp(-sum))
 
     def propagation(self):
         self.exit = self.v(np.dot(self.previous_layer.exit, self.weights))
         biggest_index = np.argmax(self.exit)
         simplified_exit = np.zeros((1,7))
-        # print(self.exit)
         simplified_exit[0][biggest_index] = 1
         return simplified_exit
-        # print("--------------------------")
 
     def error_calc(self, result):
         self.error = np.multiply(np.multiply(
